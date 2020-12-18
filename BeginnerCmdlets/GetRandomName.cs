@@ -8,7 +8,7 @@ namespace BeginnerCmdlets
     [Cmdlet(VerbsCommon.Get, "RandomName")]
     public class GetRandomName : Cmdlet
     {
-        [Parameter]
+        [Parameter(Position = 1, Mandatory = true)]
         public string Name { get; set; }
 
         protected override void ProcessRecord()
