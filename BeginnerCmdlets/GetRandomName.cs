@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Management.Automation;
 using System.Threading;
+using System.IO;
+using System.Reflection;
+using System.Linq;
 
 namespace BeginnerCmdlets
 {
@@ -14,18 +17,23 @@ namespace BeginnerCmdlets
 
         protected override void ProcessRecord()
         {
-            WriteVerbose(Name); 
-            var nameCharacters = Name.ToCharArray();
-            Array.Reverse(nameCharacters);
-            WriteObject(new
-                {
-                    ReversedName =  new String(nameCharacters),
-                    NameLength = Name.Length
-                });
+            WriteObject(
+                _names.Where(n => n.Length == Name.Length)
+                       .OrderBy(n => Guid.NewGuid())
+                       .First()
+                );
         }
 
         protected override void BeginProcessing()
         {
+            WriteVerbose("Loading names file.");
+
+            _names = File.ReadAllLines(
+                Path.Combine(
+                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    "GetRandomName.txt"
+                    )
+                );
         }
 
         protected override void EndProcessing()
@@ -35,5 +43,7 @@ namespace BeginnerCmdlets
         protected override void StopProcessing()
         {
         }
+
+        private string[] _names;
     }
 }
