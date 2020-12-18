@@ -14,23 +14,26 @@ namespace BeginnerCmdlets
 
         protected override void ProcessRecord()
         {
-            Console.WriteLine("In ProcessRecord: {0} (Len {1})", Name, Name.Length);
-            Thread.Sleep(2000);
+            WriteVerbose(Name); 
+            var nameCharacters = Name.ToCharArray();
+            Array.Reverse(nameCharacters);
+            WriteObject(new
+                {
+                    ReversedName =  new String(nameCharacters),
+                    NameLength = Name.Length
+                });
         }
 
         protected override void BeginProcessing()
         {
-            Console.WriteLine("In BeginProcessing");
         }
 
         protected override void EndProcessing()
         {
-            Console.WriteLine("In EndProcessing");
         }
 
         protected override void StopProcessing()
         {
-            Console.WriteLine("In StopProcessing");
         }
     }
 }
